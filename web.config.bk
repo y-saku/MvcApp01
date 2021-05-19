@@ -1,0 +1,45 @@
+<!--https://github.com/bencoveney/Thinktecture.IdentityModel.40/blob/master/Samples/ClaimsBasedAuthorization/ClaimsBasedAuthorization/Web.config-->
+<?xml version="1.0" encoding="utf-8" ?>
+
+<configuration>
+
+  <section name="system.identityModel" type="System.IdentityModel.Configuration.SystemIdentityModelSection, System.IdentityModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B77A5C561934E089" />
+  <section name="system.identityModel.services" type="System.IdentityModel.Services.Configuration.SystemIdentityModelServicesSection, System.IdentityModel.Services, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B77A5C561934E089" />
+
+  <location path="FederationMetadata">
+    <system.web>
+      <authorization>
+        <allow users="*" />
+      </authorization>
+    </system.web>
+  </location>
+  <system.web>
+    <authorization>
+      <deny users="?" />
+    </authorization>
+    <authentication mode="None" />
+  </system.web>
+
+  <system.identityModel>
+    <identityConfiguration>
+      <audienceUris>
+        <add value="http://localhost:5001/" />
+      </audienceUris>
+      <issuerNameRegistry type="System.IdentityModel.Tokens.ConfigurationBasedIssuerNameRegistry, System.IdentityModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+        <trustedIssuers>
+          <add thumbprint="1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234" name="YourSTSName" />
+        </trustedIssuers>
+      </issuerNameRegistry>
+      <certificateValidation certificateValidationMode="None" />
+    </identityConfiguration>
+  </system.identityModel>
+
+  <system.identityModel.services>
+    <federationConfiguration>
+      <cookieHandler requireSsl="false" />
+      <wsFederation passiveRedirectEnabled="true" issuer="http://adapplicationregistry.onmicrosoft.com/customappsso/primary" realm="http://localhost:5001/" reply="http://localhost:5001/" requireHttps="false" />
+    </federationConfiguration>
+  </system.identityModel.services>
+
+</configuration>
+
