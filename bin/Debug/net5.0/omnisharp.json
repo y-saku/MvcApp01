@@ -1,7 +1,0 @@
-{
-    "FormattingOptions": {
-        "NewLinesForBracesInControlBlocks": false,
-        "NewLineForElse": false
-    },
-    "omnisharp.path": "latest"
-}

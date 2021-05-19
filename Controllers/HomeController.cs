@@ -45,16 +45,20 @@ namespace MvcApp01.Controllers
     [AllowAnonymous]
     public IActionResult Index()
     {
-      var saml = SAML.Factory
-                               .LoginRequest(loginReqTemplate, issuer, timestamp)
-                               //  .Create(id, issuer, timestamp)
-                               .CompressAndToBase64() //圧縮とURLエンコードがあるのはクエリパラメータだから
-                               .UrlEncode();
+      // var saml = SAML.Handler.LoginRequest(loginReqTemplate, issuer, timestamp);
+      var saml = new SAML.Handler()
+                         .AddIssuer(issuer)
+                         .SetIdFromGUID()
+                         .SetTimestamp()
+                         .BuildLoginRequest();
+      Console.WriteLine(saml.XmlStr);
+      var xmlStr = saml.XmlStr.CompressAndToBase64(Encoding.UTF8) //圧縮とURLエンコードがあるのはクエリパラメータだから
+                              .UrlEncode(Encoding.UTF8);
       //RelayStateにIdPから戻ってくる際のリダイレクトURLを設定
       //https://help.liferay.com/hc/ja/articles/360033738332-SAML%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%9F%E8%AA%8D%E8%A8%BC
       var nextUrl = @"https://localhost:44377/Home/Privacy".ToBase64(Encoding.UTF8).UrlEncode(Encoding.UTF8);
-      var url = $@"{loginUrl}?SAMLRequest={saml.XmlStr}&RelayState={nextUrl}";
-      ViewBag.Message = url;
+      var url = $@"{loginUrl}?SAMLRequest={xmlStr}&RelayState={nextUrl}";
+      Console.WriteLine(url);
       // HttpContext.Session.SetString("AuthRequestID", saml.Id);
       TempData["AuthRequestID"] = saml.Id;
 
@@ -69,7 +73,7 @@ namespace MvcApp01.Controllers
     {
       VerifySAMLResponse(SAMLResponse);
       // Console.WriteLine(HttpContext.Session.GetString("AuthRequestID"));
-      Console.WriteLine("Account:"+TempData["AuthRequestID"] as string);
+      Console.WriteLine("Account:" + TempData["AuthRequestID"] as string);
       HttpContext.Session.Keys.ToList().ForEach(val => Console.WriteLine(val));
       // return View("Privacy");
       //★リダイレクト前にセッションにSAMLアサーションを追加
@@ -88,7 +92,8 @@ namespace MvcApp01.Controllers
       // HttpContext.Session.Keys.ToList().ForEach(val => Console.WriteLine(val));
       //★セッションの検証を入れる
       // VerifySAMLResponse(SAMLResponse);
-      Console.WriteLine("Privacy:"+TempData["AuthRequestID"] as string );
+      Console.WriteLine("Privacy:" + TempData["AuthRequestID"] as string);
+      
       return View();
 
     }
@@ -113,11 +118,9 @@ namespace MvcApp01.Controllers
         Console.WriteLine(reader.ReadToEnd());
       Console.WriteLine("===============================================================");
 
-      var saml = SAML.Factory
-                         .Create(SAMLResponse ?? string.Empty)
-                         .FromBase64()
-                         .Parse()
-                         ;
+      var saml = new SAML.Handler()
+                         .AddXmlStr(SAMLResponse?.FromBase64(Encoding.UTF8) ?? string.Empty)
+                         .Parse();
       // Console.WriteLine(saml.XElSignature);
       // var principal = Thread.CurrentPrincipal;
       // Console.WriteLine(principal);

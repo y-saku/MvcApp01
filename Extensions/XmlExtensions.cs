@@ -1,3 +1,4 @@
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -23,6 +24,17 @@ namespace MvcApp01.Extensions
         xmlDoc.Load(reader);
       }
       return xmlDoc.DocumentElement;
+    }
+      public static string ToSerialString(this XDocument xdoc)
+    {
+      var container = new StringBuilder();
+      var setting = new XmlWriterSettings();
+      using (var writer = XmlWriter.Create(container, setting))
+      {
+        xdoc.Save(writer);
+      };
+      return container.ToString();
+
     }
   }
 }
