@@ -25,11 +25,8 @@ namespace MvcApp01.Controllers
 {
   public class HomeController : Controller
   {
-    const string id = "id6c1c178c166d486687be4aaf5e482730";
-    // private const string issuer = @"https://sts.windows.net/005f8506-fa58-46c9-b7cc-6254a21fa596/";
     const string issuer = @"http://adapplicationregistry.onmicrosoft.com/customappsso/primary";
 
-    const string timestamp = "2013-03-18T03:28:54.1839884Z";
     const string loginUrl = @"https://login.microsoftonline.com/005f8506-fa58-46c9-b7cc-6254a21fa596/saml2";
     const string loginReqTemplate = @"/app/MvcApp01/Datas/SAMLRequest.xml";
     const string certPath = @"/app/MvcApp01/SAML_TEST01_2.cer";
@@ -93,7 +90,7 @@ namespace MvcApp01.Controllers
       //★セッションの検証を入れる
       // VerifySAMLResponse(SAMLResponse);
       Console.WriteLine("Privacy:" + TempData["AuthRequestID"] as string);
-      
+
       return View();
 
     }

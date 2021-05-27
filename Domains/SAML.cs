@@ -40,15 +40,7 @@ namespace MvcApp01.Domains
 
     public class Handler
     {
-      // const string loginReqFile = @"/app/MvcApp01/Datas/SAMLRequest.xml";
-
-      // const string id = "id6c1c178c166d486687be4aaf5e482730";
-      // // private const string issuer = @"https://sts.windows.net/005f8506-fa58-46c9-b7cc-6254a21fa596/";
-      // const string issuer = @"http://adapplicationregistry.onmicrosoft.com/customappsso/primary";
-
       const string timestamp = "2013-03-18T03:28:54.1839884Z";
-      // const string loginUrl = @"https://login.microsoftonline.com/005f8506-fa58-46c9-b7cc-6254a21fa596/saml2";
-      // public static SAMLAuthRequest Create() => new SAMLAuthRequest(id, issuer, timestamp, loginUrl);
       public SAML saml { get; }
       // Azure AD はこの属性を使用して、返される応答の InResponseTo 属性を設定します。 
       // ID の 1 文字目に数字を使用することはできないので、一般的な方法としては、GUID の文字列表現の前に "id" のような文字列を付加します。 
